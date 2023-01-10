@@ -30,7 +30,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public static int scrHeight = 720;
 
 	// создание массива ссылок на объекты
-	Mosquito[] mosq = new Mosquito[115];
+	Mosquito[] mosq = new Mosquito[15];
 	int kills = 0;
 	long timeStart, timeCurrent;
 	
