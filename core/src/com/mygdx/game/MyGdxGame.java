@@ -33,6 +33,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	Mosquito[] mosq = new Mosquito[15];
 	int kills = 0;
 	long timeStart, timeCurrent;
+
+	boolean gameOver = false;
 	
 	@Override
 	public void create () {
@@ -93,6 +95,9 @@ public class MyGdxGame extends ApplicationAdapter {
 					if(mosq[i].hit(touch.x, touch.y)) {
 						kills++;
 						sndMosq[MathUtils.random(0, 3)].play();
+						if(kills == mosq.length) {
+							gameOver = true;
+						}
 						break;
 					}
 				}
@@ -103,7 +108,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (int i = 0; i < mosq.length; i++) {
 			mosq[i].fly();
 		}
-		timeCurrent = TimeUtils.millis() - timeStart;
+		if(!gameOver) {
+			timeCurrent = TimeUtils.millis() - timeStart;
+		}
 
 		// отрисовка всего
 		camera.update();
