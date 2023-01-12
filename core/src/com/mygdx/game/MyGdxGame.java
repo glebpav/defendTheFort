@@ -76,6 +76,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		generator.dispose();
 	}
 
+	String timeToString(long time){
+		String min = "" + time/1000/60/10 + time/1000/60%10;
+		String sec = "" + time/1000%60/10 + time/1000%60%10;
+		return min+":"+sec;
+	}
+
 	@Override
 	public void render () { // повторяется с частотой 60 fps
 		// касания экрана/клики мышью
@@ -108,7 +114,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			batch.draw(imgMosq[mosq[i].faza], mosq[i].x, mosq[i].y, mosq[i].width, mosq[i].height, 0, 0, 500, 500, mosq[i].isFlip(), false);
 		}
 		font.draw(batch, "MOSQUITOS KILLED: "+kills, 10, scrHeight-10);
-		font.draw(batch, ""+timeCurrent, scrWidth-150, scrHeight-10);
+		font.draw(batch, "TIME: "+timeToString(timeCurrent), scrWidth-300, scrHeight-10);
 		batch.end();
 	}
 	
