@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -30,7 +31,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public static int scrHeight = 720;
 
 	// создание массива ссылок на объекты
-	Mosquito[] mosq = new Mosquito[15];
+	Mosquito[] mosq = new Mosquito[5];
 	int kills = 0;
 	long timeStart, timeCurrent;
 
@@ -71,8 +72,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mr_countryhouse.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = 50;
-		parameter.color = Color.CORAL;
-		parameter.borderWidth = 1;
+		parameter.color = Color.CHARTREUSE;
+		parameter.borderWidth = 2;
 		parameter.borderColor = Color.BLACK;
 		font = generator.generateFont(parameter);
 		generator.dispose();
@@ -104,7 +105,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 		}
 
-		// события движение москитов
+		// события игры
 		for (int i = 0; i < mosq.length; i++) {
 			mosq[i].fly();
 		}
@@ -122,6 +123,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		font.draw(batch, "MOSQUITOS KILLED: "+kills, 10, scrHeight-10);
 		font.draw(batch, "TIME: "+timeToString(timeCurrent), scrWidth-300, scrHeight-10);
+		if(gameOver) {
+			font.draw(batch,"Game Over", 0, scrHeight/2, scrWidth, Align.center, true);
+		}
 		batch.end();
 	}
 	
