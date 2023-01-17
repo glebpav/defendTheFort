@@ -19,7 +19,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch; // ссылка на объект, отвечающий за вывод изображений
 	OrthographicCamera camera;
 	Vector3 touch;
-	BitmapFont font;
+	BitmapFont font, fontLarge;
 
 	Texture[] imgMosq = new Texture[11]; // ссылка на текстуры (картинки)
 	Texture imgBackGround; // фон
@@ -36,6 +36,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	long timeStart, timeCurrent;
 
 	boolean gameOver = false;
+	Player[] players = new Player[5];
 	
 	@Override
 	public void create () {
@@ -65,6 +66,11 @@ public class MyGdxGame extends ApplicationAdapter {
 			mosq[i] = new Mosquito();
 		}
 
+		// создаём объекты игроков для таблицы рекордов
+		for (int i = 0; i < players.length; i++) {
+			players[i] = new Player("None", 0);
+		}
+
 		timeStart = TimeUtils.millis();
 	}
 
@@ -76,6 +82,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		parameter.borderWidth = 2;
 		parameter.borderColor = Color.BLACK;
 		font = generator.generateFont(parameter);
+
+		parameter.size = 70;
+		fontLarge = generator.generateFont(parameter);
+
 		generator.dispose();
 	}
 
@@ -124,7 +134,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		font.draw(batch, "MOSQUITOS KILLED: "+kills, 10, scrHeight-10);
 		font.draw(batch, "TIME: "+timeToString(timeCurrent), scrWidth-300, scrHeight-10);
 		if(gameOver) {
-			font.draw(batch,"Game Over", 0, scrHeight/2, scrWidth, Align.center, true);
+			fontLarge.draw(batch,"Game Over", 0, 600, scrWidth, Align.center, true);
+			for (int i = 0; i < players.length; i++) {
+				String s = players[i].name + "......." + timeToString(players[i].time);
+				font.draw(batch, s, 0, 500-i*50, scrWidth, Align.center, true);
+			}
 		}
 		batch.end();
 	}
