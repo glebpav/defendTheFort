@@ -95,6 +95,33 @@ public class MyGdxGame extends ApplicationAdapter {
 		return min+":"+sec;
 	}
 
+	void gameOver(){
+		gameOver = true;
+		players[players.length-1].name = "Hunter";
+		players[players.length-1].time = timeCurrent;
+		for (int i = 0; i < players.length; i++) {
+			if(players[i].time == 0) players[i].time = 1000000;
+		}
+		for (int j = 0; j < players.length-1; j++) {
+			for (int i = 0; i < players.length-1; i++) {
+				if(players[i].time>players[i+1].time){
+					long c = players[i].time;
+					players[i].time = players[i+1].time;
+					players[i+1].time = c;
+					String s = players[i].name;
+					players[i].name = players[i+1].name;
+					players[i+1].name = s;
+					/* Player c = players[i];
+					players[i] = players[i+1];
+					players[i+1] = c; */
+				}
+			}
+		}
+		for (int i = 0; i < players.length; i++) {
+			if(players[i].time == 1000000) players[i].time = 0;
+		}
+	}
+
 	@Override
 	public void render () { // повторяется с частотой 60 fps
 		// касания экрана/клики мышью
@@ -107,7 +134,7 @@ public class MyGdxGame extends ApplicationAdapter {
 						kills++;
 						sndMosq[MathUtils.random(0, 3)].play();
 						if(kills == mosq.length) {
-							gameOver = true;
+							gameOver();
 						}
 						break;
 					}
