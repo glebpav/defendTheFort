@@ -51,7 +51,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		for(int i=0; i<imgMosq.length; i++){
 			imgMosq[i] = new Texture("mosq"+i+".png");
 		}
-		imgBackGround = new Texture("moscowcity.jpg");
+		imgBackGround = new Texture("boloto.jpg");
 
 		// создаём объекты звуков
 		for(int i=0; i<sndMosq.length; i++) {
