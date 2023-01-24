@@ -37,6 +37,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	boolean gameOver = false;
 	Player[] players = new Player[5];
+
+	TextButton btnExit;
 	
 	@Override
 	public void create () {
@@ -71,11 +73,15 @@ public class MyGdxGame extends ApplicationAdapter {
 			players[i] = new Player("None", 0);
 		}
 
+		// создаём кнопки
+		btnExit = new TextButton(fontLarge, "EXIT", 100, 100);
+
 		timeStart = TimeUtils.millis();
 	}
 
 	void createFont(){
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mr_countryhouse.ttf"));
+		//FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("comic.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = 50;
 		parameter.color = Color.CHARTREUSE;
@@ -93,6 +99,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		String min = "" + time/1000/60/10 + time/1000/60%10;
 		String sec = "" + time/1000%60/10 + time/1000%60%10;
 		return min+":"+sec;
+	}
+
+	void gameStart(){
+
 	}
 
 	void gameOver(){
@@ -140,6 +150,11 @@ public class MyGdxGame extends ApplicationAdapter {
 					}
 				}
 			}
+			if(gameOver){
+				if(btnExit.hit(touch.x, touch.y)) {
+					Gdx.app.exit();
+				}
+			}
 		}
 
 		// события игры
@@ -166,6 +181,7 @@ public class MyGdxGame extends ApplicationAdapter {
 				String s = players[i].name + "......." + timeToString(players[i].time);
 				font.draw(batch, s, 0, 500-i*50, scrWidth, Align.center, true);
 			}
+			fontLarge.draw(batch, btnExit.text, btnExit.x, btnExit.y);
 		}
 		batch.end();
 	}
