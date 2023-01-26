@@ -32,13 +32,13 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	// создание массива ссылок на объекты
 	Mosquito[] mosq = new Mosquito[5];
-	int kills = 0;
+	int kills;
 	long timeStart, timeCurrent;
 
-	boolean gameOver = false;
+	boolean gameOver;
 	Player[] players = new Player[5];
 
-	TextButton btnExit;
+	TextButton btnRestart, btnExit;
 	
 	@Override
 	public void create () {
@@ -63,20 +63,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		sndMusic.setLooping(true);
 		//sndMusic.play();
 
-		// создание объектов комаров
-		for(int i=0; i<mosq.length; i++) {
-			mosq[i] = new Mosquito();
-		}
-
 		// создаём объекты игроков для таблицы рекордов
 		for (int i = 0; i < players.length; i++) {
 			players[i] = new Player("None", 0);
 		}
 
 		// создаём кнопки
-		btnExit = new TextButton(fontLarge, "EXIT", 100, 100);
+		btnRestart = new TextButton(font, "RESTART", 450, 200);
+		btnExit = new TextButton(font, "EXIT", 750, 200);
 
-		timeStart = TimeUtils.millis();
+		gameStart();
 	}
 
 	void createFont(){
@@ -102,13 +98,23 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	void gameStart(){
-
+		// создание объектов комаров
+		for(int i=0; i<mosq.length; i++) {
+			mosq[i] = new Mosquito();
+		}
+		kills = 0;
+		gameOver = false;
+		timeStart = TimeUtils.millis();
 	}
 
 	void gameOver(){
 		gameOver = true;
 		players[players.length-1].name = "Hunter";
 		players[players.length-1].time = timeCurrent;
+		sortTableOfRecords();
+	}
+
+	void sortTableOfRecords(){
 		for (int i = 0; i < players.length; i++) {
 			if(players[i].time == 0) players[i].time = 1000000;
 		}
@@ -154,6 +160,9 @@ public class MyGdxGame extends ApplicationAdapter {
 				if(btnExit.hit(touch.x, touch.y)) {
 					Gdx.app.exit();
 				}
+				if(btnRestart.hit(touch.x, touch.y)) {
+					gameStart();
+				}
 			}
 		}
 
@@ -181,7 +190,8 @@ public class MyGdxGame extends ApplicationAdapter {
 				String s = players[i].name + "......." + timeToString(players[i].time);
 				font.draw(batch, s, 0, 500-i*50, scrWidth, Align.center, true);
 			}
-			fontLarge.draw(batch, btnExit.text, btnExit.x, btnExit.y);
+			font.draw(batch, btnRestart.text, btnRestart.x, btnRestart.y);
+			font.draw(batch, btnExit.text, btnExit.x, btnExit.y);
 		}
 		batch.end();
 	}
