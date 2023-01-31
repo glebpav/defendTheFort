@@ -21,6 +21,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	Vector3 touch;
 	BitmapFont font, fontLarge;
 
+	InputKeyboard keyboard;
+
 	Texture[] imgMosq = new Texture[11]; // ссылка на текстуры (картинки)
 	Texture imgBackGround; // фон
 
@@ -35,7 +37,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	int kills;
 	long timeStart, timeCurrent;
 
-	boolean gameOver;
+	// состояние игры
+	public static final int PLAY_GAME = 0, ENTER_NAME = 1, SHOW_TABLE = 2;
+	int gameState;
+
 	Player[] players = new Player[5];
 
 	TextButton btnRestart, btnExit;
@@ -48,6 +53,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		touch = new Vector3();
 
 		createFont();
+
+		keyboard = new InputKeyboard(scrWidth, scrHeight, 10);
 
 		// создаём объекты изображений
 		for(int i=0; i<imgMosq.length; i++){
@@ -79,6 +86,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mr_countryhouse.ttf"));
 		//FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("comic.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 		parameter.size = 50;
 		parameter.color = Color.CHARTREUSE;
 		parameter.borderWidth = 2;
@@ -103,13 +111,13 @@ public class MyGdxGame extends ApplicationAdapter {
 			mosq[i] = new Mosquito();
 		}
 		kills = 0;
-		gameOver = false;
+		gameState = PLAY_GAME;
 		timeStart = TimeUtils.millis();
 	}
 
 	void gameOver(){
-		gameOver = true;
-		players[players.length-1].name = "Hunter";
+		gameState = SHOW_TABLE;
+		players[players.length-1].name = keyboard.getText();
 		players[players.length-1].time = timeCurrent;
 		sortTableOfRecords();
 	}
@@ -144,24 +152,31 @@ public class MyGdxGame extends ApplicationAdapter {
 		if(Gdx.input.justTouched()) {
 			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touch);
-			for (int i = mosq.length-1; i >= 0; i--) {
-				if(mosq[i].isAlive) {
-					if(mosq[i].hit(touch.x, touch.y)) {
-						kills++;
-						sndMosq[MathUtils.random(0, 3)].play();
-						if(kills == mosq.length) {
-							gameOver();
+			if(gameState == PLAY_GAME) {
+				for (int i = mosq.length - 1; i >= 0; i--) {
+					if (mosq[i].isAlive) {
+						if (mosq[i].hit(touch.x, touch.y)) {
+							kills++;
+							sndMosq[MathUtils.random(0, 3)].play();
+							if (kills == mosq.length) {
+								gameState = ENTER_NAME;
+							}
+							break;
 						}
-						break;
 					}
 				}
 			}
-			if(gameOver){
+			if(gameState == SHOW_TABLE){
 				if(btnExit.hit(touch.x, touch.y)) {
 					Gdx.app.exit();
 				}
 				if(btnRestart.hit(touch.x, touch.y)) {
 					gameStart();
+				}
+			}
+			if(gameState == ENTER_NAME){
+				if(keyboard.endOfEdit(touch.x, touch.y)){
+					gameOver();
 				}
 			}
 		}
@@ -170,7 +185,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (int i = 0; i < mosq.length; i++) {
 			mosq[i].fly();
 		}
-		if(!gameOver) {
+		if(gameState == PLAY_GAME) {
 			timeCurrent = TimeUtils.millis() - timeStart;
 		}
 
@@ -184,7 +199,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		font.draw(batch, "MOSQUITOS KILLED: "+kills, 10, scrHeight-10);
 		font.draw(batch, "TIME: "+timeToString(timeCurrent), scrWidth-300, scrHeight-10);
-		if(gameOver) {
+		if(gameState == SHOW_TABLE) {
 			fontLarge.draw(batch,"Game Over", 0, 600, scrWidth, Align.center, true);
 			for (int i = 0; i < players.length; i++) {
 				String s = players[i].name + "......." + timeToString(players[i].time);
@@ -192,6 +207,9 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 			font.draw(batch, btnRestart.text, btnRestart.x, btnRestart.y);
 			font.draw(batch, btnExit.text, btnExit.x, btnExit.y);
+		}
+		if(gameState == ENTER_NAME){
+			keyboard.draw(batch);
 		}
 		batch.end();
 	}
@@ -204,5 +222,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		imgBackGround.dispose();
 		sndMusic.dispose();
+		keyboard.dispose();
 	}
 }
