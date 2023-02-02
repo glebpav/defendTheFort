@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -120,6 +121,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		players[players.length-1].name = keyboard.getText();
 		players[players.length-1].time = timeCurrent;
 		sortTableOfRecords();
+		saveTableOfRecords();
+	}
+
+	void saveTableOfRecords(){
+		Preferences prefs = Gdx.app.getPreferences("Table Of Records");
+		for (int i = 0; i < players.length; i++) {
+			prefs.putString("name"+i, players[i].name);
+			prefs.putLong("time"+i, players[i].time);
+		}
+		prefs.flush();
 	}
 
 	void sortTableOfRecords(){

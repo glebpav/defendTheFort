@@ -220,10 +220,8 @@ public class InputKeyboard {
         parameter.borderColor = Color.BLACK;
         parameter.borderWidth = 1;
         parameter.borderStraight = true;
-        String str = "";
-        for (char i = 0x20; i < 0x7B; i++) str += i;
-        for (char i = 0x401; i < 0x452; i++) str += i;
-        parameter.characters = str;
+        parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
+        System.out.println(parameter.characters);
         font = generator.generateFont(parameter);
         generator.dispose();
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
