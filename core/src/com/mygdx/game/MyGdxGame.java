@@ -75,6 +75,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (int i = 0; i < players.length; i++) {
 			players[i] = new Player("None", 0);
 		}
+		loadTableOfRecords();
 
 		// создаём кнопки
 		btnRestart = new TextButton(font, "RESTART", 450, 200);
@@ -131,6 +132,14 @@ public class MyGdxGame extends ApplicationAdapter {
 			prefs.putLong("time"+i, players[i].time);
 		}
 		prefs.flush();
+	}
+
+	void loadTableOfRecords(){
+		Preferences prefs = Gdx.app.getPreferences("Table Of Records");
+		for (int i = 0; i < players.length; i++) {
+			if(prefs.contains("name"+i)) players[i].name = prefs.getString("name"+i);
+			if(prefs.contains("time"+i)) players[i].time = prefs.getLong("time"+i);
+		}
 	}
 
 	void sortTableOfRecords(){
