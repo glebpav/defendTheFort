@@ -1,7 +1,7 @@
 package com.mygdx.game;
 
-import static com.mygdx.game.MyGdxGame.scrHeight;
-import static com.mygdx.game.MyGdxGame.scrWidth;
+import static com.mygdx.game.MyGdxGame.SCR_HEIGHT;
+import static com.mygdx.game.MyGdxGame.SCR_WIDTH;
 
 import com.badlogic.gdx.math.MathUtils;
 
@@ -14,8 +14,8 @@ public class Mosquito {
 
     public Mosquito(){
         width = height = MathUtils.random(100, 200);
-        x = scrWidth / 2f - width / 2;
-        y = scrHeight / 2f - height / 2;
+        x = SCR_WIDTH / 2f - width / 2;
+        y = SCR_HEIGHT / 2f - height / 2;
         vx = MathUtils.random(-5f, 5);
         vy = MathUtils.random(-5f, 5);
         faza = MathUtils.random(0, nFaz-1);
@@ -31,15 +31,15 @@ public class Mosquito {
     }
 
     void outOfBounds1(){
-        if(x<0 || x>scrWidth-width) vx = -vx;
-        if(y<0 || y>scrHeight-height) vy = -vy;
+        if(x<0 || x> SCR_WIDTH -width) vx = -vx;
+        if(y<0 || y> SCR_HEIGHT -height) vy = -vy;
     }
 
     void outOfBounds2(){
-        if(x<0-width) x = scrWidth;
-        if(x>scrWidth) x = 0-width;
-        if(y<0-height) y = scrHeight;
-        if(y>scrHeight) y = 0-height;
+        if(x<0-width) x = SCR_WIDTH;
+        if(x> SCR_WIDTH) x = 0-width;
+        if(y<0-height) y = SCR_HEIGHT;
+        if(y> SCR_HEIGHT) y = 0-height;
     }
 
     void changePhase(){
@@ -48,8 +48,6 @@ public class Mosquito {
     }
 
     boolean isFlip(){
-        //if(vx>0) return true;
-        //else return false;
         return vx>0;
     }
 

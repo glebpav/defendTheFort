@@ -17,7 +17,6 @@ public class TextButton {
         GlyphLayout gl = new GlyphLayout(font, text);
         width = gl.width;
         height = gl.height;
-        System.out.println(" qqq "+width+" "+height);
     }
 
     boolean hit(float tx, float ty){
