@@ -85,6 +85,6 @@ public class ScreenIntro implements Screen {
 
     @Override
     public void dispose() {
-
+        imgBackGround.dispose();
     }
 }

@@ -61,8 +61,6 @@ public class ScreenGame implements Screen {
 		// создаём кнопки
 		btnRestart = new TextButton(mgg.font, "RESTART", 450, 200);
 		btnExit = new TextButton(mgg.font, "EXIT", 750, 200);
-
-		gameStart();
 	}
 
 	String timeToString(long time){
@@ -132,7 +130,7 @@ public class ScreenGame implements Screen {
 
 	@Override
 	public void show() {
-
+		gameStart();
 	}
 
 	@Override
@@ -157,7 +155,7 @@ public class ScreenGame implements Screen {
 			}
 			if(gameState == SHOW_TABLE){
 				if(btnExit.hit(mgg.touch.x, mgg.touch.y)) {
-					Gdx.app.exit();
+					mgg.setScreen(mgg.screenIntro);
 				}
 				if(btnRestart.hit(mgg.touch.x, mgg.touch.y)) {
 					gameStart();
