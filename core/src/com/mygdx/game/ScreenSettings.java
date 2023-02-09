@@ -7,13 +7,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 
-public class ScreenIntro implements Screen {
+public class ScreenSettings implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фон
     TextButton btnGame, btnOptions, btnAbout, btnExit;
 
-    public ScreenIntro(MyGdxGame myGdxGame){
+    public ScreenSettings(MyGdxGame myGdxGame){
         mgg = myGdxGame;
         imgBackGround = new Texture("boloto1.jpg");
         // создаём кнопки
@@ -41,7 +41,7 @@ public class ScreenIntro implements Screen {
 
             }
             if(btnAbout.hit(mgg.touch.x, mgg.touch.y)){
-                mgg.setScreen(mgg.screenAbout);
+
             }
             if(btnExit.hit(mgg.touch.x, mgg.touch.y)){
                 Gdx.app.exit();

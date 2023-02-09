@@ -7,20 +7,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 
-public class ScreenIntro implements Screen {
+public class ScreenAbout implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фон
-    TextButton btnGame, btnOptions, btnAbout, btnExit;
+    TextButton btnBack;
 
-    public ScreenIntro(MyGdxGame myGdxGame){
+    String textAbout =  "It's my Game.\n" +
+                        "Это супер игра\n" +
+                        "про комаров.";
+
+    public ScreenAbout(MyGdxGame myGdxGame){
         mgg = myGdxGame;
-        imgBackGround = new Texture("boloto1.jpg");
+        imgBackGround = new Texture("boloto2.jpg");
         // создаём кнопки
-        btnGame = new TextButton(mgg.fontLarge, "PLAY", 500, 600);
-        btnOptions = new TextButton(mgg.fontLarge, "OPTIONS", 500, 500);
-        btnAbout = new TextButton(mgg.fontLarge, "ABOUT", 500, 400);
-        btnExit = new TextButton(mgg.fontLarge, "EXIT", 500, 300);
+
+        btnBack = new TextButton(mgg.fontLarge, "BACK", 500, 300);
     }
 
     @Override
@@ -34,17 +36,9 @@ public class ScreenIntro implements Screen {
         if(Gdx.input.justTouched()) {
             mgg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             mgg.camera.unproject(mgg.touch);
-            if(btnGame.hit(mgg.touch.x, mgg.touch.y)){
-                mgg.setScreen(mgg.screenGame);
-            }
-            if(btnOptions.hit(mgg.touch.x, mgg.touch.y)){
 
-            }
-            if(btnAbout.hit(mgg.touch.x, mgg.touch.y)){
-                mgg.setScreen(mgg.screenAbout);
-            }
-            if(btnExit.hit(mgg.touch.x, mgg.touch.y)){
-                Gdx.app.exit();
+            if(btnBack.hit(mgg.touch.x, mgg.touch.y)){
+                mgg.setScreen(mgg.screenIntro);
             }
         }
 
@@ -56,10 +50,8 @@ public class ScreenIntro implements Screen {
         mgg.batch.setProjectionMatrix(mgg.camera.combined);
         mgg.batch.begin();
         mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        btnGame.font.draw(mgg.batch, btnGame.text, btnGame.x, btnGame.y);
-        btnOptions.font.draw(mgg.batch, btnOptions.text, btnOptions.x, btnOptions.y);
-        btnAbout.font.draw(mgg.batch, btnAbout.text, btnAbout.x, btnAbout.y);
-        btnExit.font.draw(mgg.batch, btnExit.text, btnExit.x, btnExit.y);
+        mgg.font.draw(mgg.batch, textAbout, btnBack.x, btnBack.y + 300);
+        btnBack.font.draw(mgg.batch, btnBack.text, btnBack.x, btnBack.y);
         mgg.batch.end();
     }
 
