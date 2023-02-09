@@ -25,6 +25,7 @@ public class MyGdxGame extends Game {
 	BitmapFont font, fontLarge;
 	InputKeyboard keyboard;
 
+	ScreenIntro screenIntro;
 	ScreenGame screenGame;
 	
 	@Override
@@ -37,8 +38,9 @@ public class MyGdxGame extends Game {
 		createFont();
 		keyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT, 10);
 
+		screenIntro = new ScreenIntro(this);
 		screenGame = new ScreenGame(this);
-		setScreen(screenGame);
+		setScreen(screenIntro);
 	}
 
 	void createFont(){
