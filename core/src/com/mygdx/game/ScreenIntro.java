@@ -11,16 +11,16 @@ public class ScreenIntro implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фон
-    TextButton btnGame, btnOptions, btnAbout, btnExit;
+    MosquitoButton btnGame, btnOptions, btnAbout, btnExit;
 
     public ScreenIntro(MyGdxGame myGdxGame){
         mgg = myGdxGame;
         imgBackGround = new Texture("boloto1.jpg");
         // создаём кнопки
-        btnGame = new TextButton(mgg.fontLarge, "PLAY", 500, 600);
-        btnOptions = new TextButton(mgg.fontLarge, "OPTIONS", 500, 500);
-        btnAbout = new TextButton(mgg.fontLarge, "ABOUT", 500, 400);
-        btnExit = new TextButton(mgg.fontLarge, "EXIT", 500, 300);
+        btnGame = new MosquitoButton(mgg.fontLarge, "PLAY", 500, 600);
+        btnOptions = new MosquitoButton(mgg.fontLarge, "OPTIONS", 500, 500);
+        btnAbout = new MosquitoButton(mgg.fontLarge, "ABOUT", 500, 400);
+        btnExit = new MosquitoButton(mgg.fontLarge, "EXIT", 500, 300);
     }
 
     @Override

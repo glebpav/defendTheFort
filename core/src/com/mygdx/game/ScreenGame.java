@@ -18,12 +18,13 @@ public class ScreenGame implements Screen {
 
 	Texture[] imgMosq = new Texture[11]; // ссылка на текстуры (картинки)
 	Texture imgBackGround; // фон
+	Texture imgBtnMenu;
 
 	Sound[] sndMosq = new Sound[4];
 	Music sndMusic;
 
 	// создание массива ссылок на объекты
-	Mosquito[] mosq = new Mosquito[5];
+	Mosquito[] mosq = new Mosquito[55];
 	int kills;
 	long timeStart, timeCurrent;
 
@@ -33,7 +34,8 @@ public class ScreenGame implements Screen {
 
 	Player[] players = new Player[5];
 
-	TextButton btnRestart, btnExit;
+	MosquitoButton btnRestart, btnExit;
+	MosquitoButton btnMenu;
 
 	public ScreenGame (MyGdxGame myGdxGame) {
 		mgg = myGdxGame;
@@ -43,12 +45,13 @@ public class ScreenGame implements Screen {
 			imgMosq[i] = new Texture("mosq"+i+".png");
 		}
 		imgBackGround = new Texture("boloto.jpg");
+		imgBtnMenu = new Texture("menu.png");
 
 		// создаём объекты звуков
 		for(int i=0; i<sndMosq.length; i++) {
-			sndMosq[i] = Gdx.audio.newSound(Gdx.files.internal("mos"+i+".mp3"));
+			sndMosq[i] = Gdx.audio.newSound(Gdx.files.internal("sound/mos"+i+".mp3"));
 		}
-		sndMusic = Gdx.audio.newMusic(Gdx.files.internal("smeshariki.mp3"));
+		sndMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/smeshariki.mp3"));
 		sndMusic.setLooping(true);
 		//sndMusic.play();
 
@@ -59,8 +62,117 @@ public class ScreenGame implements Screen {
 		loadTableOfRecords();
 
 		// создаём кнопки
-		btnRestart = new TextButton(mgg.font, "RESTART", 450, 200);
-		btnExit = new TextButton(mgg.font, "EXIT", 750, 200);
+		btnRestart = new MosquitoButton(mgg.font, "RESTART", 450, 200);
+		btnExit = new MosquitoButton(mgg.font, "EXIT", 750, 200);
+		btnMenu = new MosquitoButton(SCR_WIDTH-60, SCR_HEIGHT-60, 50, 50);
+	}
+
+	@Override
+	public void show() {
+		gameStart();
+	}
+
+	@Override
+	public void render(float delta) {// повторяется с частотой 60 fps
+		// касания экрана/клики мышью
+		if(Gdx.input.justTouched()) {
+			mgg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			mgg.camera.unproject(mgg.touch);
+			if(gameState == PLAY_GAME) {
+				for (int i = mosq.length - 1; i >= 0; i--) {
+					if (mosq[i].isAlive) {
+						if (mosq[i].hit(mgg.touch.x, mgg.touch.y)) {
+							kills++;
+							sndMosq[MathUtils.random(0, 3)].play();
+							if (kills == mosq.length) {
+								gameState = ENTER_NAME;
+							}
+							break;
+						}
+					}
+				}
+			}
+			if(gameState == SHOW_TABLE){
+				if(btnExit.hit(mgg.touch.x, mgg.touch.y)) {
+					mgg.setScreen(mgg.screenIntro);
+				}
+				if(btnRestart.hit(mgg.touch.x, mgg.touch.y)) {
+					gameStart();
+				}
+			}
+			if(gameState == ENTER_NAME){
+				if(mgg.keyboard.endOfEdit(mgg.touch.x, mgg.touch.y)){
+					gameOver();
+				}
+			}
+			if(btnMenu.hit(mgg.touch.x, mgg.touch.y)){
+				mgg.setScreen(mgg.screenIntro);
+			}
+		}
+
+		// события игры
+		for (int i = 0; i < mosq.length; i++) {
+			mosq[i].fly();
+		}
+		if(gameState == PLAY_GAME) {
+			timeCurrent = TimeUtils.millis() - timeStart;
+		}
+
+		// отрисовка всего
+		mgg.camera.update();
+		mgg.batch.setProjectionMatrix(mgg.camera.combined);
+		mgg.batch.begin();
+		mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
+		for(int i=0; i<mosq.length; i++) {
+			mgg.batch.draw(imgMosq[mosq[i].faza], mosq[i].x, mosq[i].y, mosq[i].width, mosq[i].height, 0, 0, 500, 500, mosq[i].isFlip(), false);
+		}
+		mgg.font.draw(mgg.batch, "MOSQUITOS KILLED: "+kills, 10, SCR_HEIGHT-10);
+		mgg.font.draw(mgg.batch, "TIME: "+timeToString(timeCurrent), SCR_WIDTH-500, SCR_HEIGHT-10);
+		if(gameState == SHOW_TABLE) {
+			mgg.fontLarge.draw(mgg.batch,"Game Over", 0, 600, SCR_WIDTH, Align.center, true);
+			for (int i = 0; i < players.length; i++) {
+				String s = players[i].name + "......." + timeToString(players[i].time);
+				mgg.font.draw(mgg.batch, s, 0, 500-i*50, SCR_WIDTH, Align.center, true);
+			}
+			mgg.font.draw(mgg.batch, btnRestart.text, btnRestart.x, btnRestart.y);
+			mgg.font.draw(mgg.batch, btnExit.text, btnExit.x, btnExit.y);
+		}
+		if(gameState == ENTER_NAME){
+			mgg.keyboard.draw(mgg.batch);
+		}
+		mgg.batch.draw(imgBtnMenu, btnMenu.x, btnMenu.y, btnMenu.width, btnMenu.height);
+		mgg.batch.end();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+
+	}
+
+	@Override
+	public void pause() {
+
+	}
+
+	@Override
+	public void resume() {
+
+	}
+
+	@Override
+	public void hide() {
+
+	}
+
+	@Override
+	public void dispose () {
+		for (int i = 0; i < imgMosq.length; i++) {
+			imgMosq[i].dispose();
+		}
+		for (int i = 0; i < sndMosq.length; i++) {
+			sndMosq[i].dispose();
+		}
+		imgBackGround.dispose();
 	}
 
 	String timeToString(long time){
@@ -126,109 +238,5 @@ public class ScreenGame implements Screen {
 		for (int i = 0; i < players.length; i++) {
 			if(players[i].time == 1000000) players[i].time = 0;
 		}
-	}
-
-	@Override
-	public void show() {
-		gameStart();
-	}
-
-	@Override
-	public void render(float delta) {// повторяется с частотой 60 fps
-		// касания экрана/клики мышью
-		if(Gdx.input.justTouched()) {
-			mgg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			mgg.camera.unproject(mgg.touch);
-			if(gameState == PLAY_GAME) {
-				for (int i = mosq.length - 1; i >= 0; i--) {
-					if (mosq[i].isAlive) {
-						if (mosq[i].hit(mgg.touch.x, mgg.touch.y)) {
-							kills++;
-							sndMosq[MathUtils.random(0, 3)].play();
-							if (kills == mosq.length) {
-								gameState = ENTER_NAME;
-							}
-							break;
-						}
-					}
-				}
-			}
-			if(gameState == SHOW_TABLE){
-				if(btnExit.hit(mgg.touch.x, mgg.touch.y)) {
-					mgg.setScreen(mgg.screenIntro);
-				}
-				if(btnRestart.hit(mgg.touch.x, mgg.touch.y)) {
-					gameStart();
-				}
-			}
-			if(gameState == ENTER_NAME){
-				if(mgg.keyboard.endOfEdit(mgg.touch.x, mgg.touch.y)){
-					gameOver();
-				}
-			}
-		}
-
-		// события игры
-		for (int i = 0; i < mosq.length; i++) {
-			mosq[i].fly();
-		}
-		if(gameState == PLAY_GAME) {
-			timeCurrent = TimeUtils.millis() - timeStart;
-		}
-
-		// отрисовка всего
-		mgg.camera.update();
-		mgg.batch.setProjectionMatrix(mgg.camera.combined);
-		mgg.batch.begin();
-		mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-		for(int i=0; i<mosq.length; i++) {
-			mgg.batch.draw(imgMosq[mosq[i].faza], mosq[i].x, mosq[i].y, mosq[i].width, mosq[i].height, 0, 0, 500, 500, mosq[i].isFlip(), false);
-		}
-		mgg.font.draw(mgg.batch, "MOSQUITOS KILLED: "+kills, 10, SCR_HEIGHT-10);
-		mgg.font.draw(mgg.batch, "TIME: "+timeToString(timeCurrent), SCR_WIDTH-300, SCR_HEIGHT-10);
-		if(gameState == SHOW_TABLE) {
-			mgg.fontLarge.draw(mgg.batch,"Game Over", 0, 600, SCR_WIDTH, Align.center, true);
-			for (int i = 0; i < players.length; i++) {
-				String s = players[i].name + "......." + timeToString(players[i].time);
-				mgg.font.draw(mgg.batch, s, 0, 500-i*50, SCR_WIDTH, Align.center, true);
-			}
-			mgg.font.draw(mgg.batch, btnRestart.text, btnRestart.x, btnRestart.y);
-			mgg.font.draw(mgg.batch, btnExit.text, btnExit.x, btnExit.y);
-		}
-		if(gameState == ENTER_NAME){
-			mgg.keyboard.draw(mgg.batch);
-		}
-		mgg.batch.end();
-	}
-
-	@Override
-	public void resize(int width, int height) {
-
-	}
-
-	@Override
-	public void pause() {
-
-	}
-
-	@Override
-	public void resume() {
-
-	}
-
-	@Override
-	public void hide() {
-
-	}
-
-	@Override
-	public void dispose () {
-		for (int i = 0; i < imgMosq.length; i++) {
-			imgMosq[i].dispose();
-		}
-		for (int i = 0; i < sndMosq.length; i++) {
-			sndMosq[i].dispose();
-		}
-		imgBackGround.dispose();
 	}
 }

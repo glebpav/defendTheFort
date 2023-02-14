@@ -11,7 +11,7 @@ public class ScreenAbout implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фон
-    TextButton btnBack;
+    MosquitoButton btnBack;
 
     String textAbout =  "It's my Game.\n" +
                         "Это супер игра\n" +
@@ -22,7 +22,7 @@ public class ScreenAbout implements Screen {
         imgBackGround = new Texture("boloto2.jpg");
         // создаём кнопки
 
-        btnBack = new TextButton(mgg.fontLarge, "BACK", 500, 300);
+        btnBack = new MosquitoButton(mgg.fontLarge, "BACK", 500, 300);
     }
 
     @Override
