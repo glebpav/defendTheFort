@@ -29,6 +29,9 @@ public class MyGdxGame extends Game {
 	ScreenGame screenGame;
 	ScreenSettings screenSettings;
 	ScreenAbout screenAbout;
+
+	boolean soundOn = true;
+	boolean musicOn = true;
 	
 	@Override
 	public void create () {
@@ -44,6 +47,7 @@ public class MyGdxGame extends Game {
 		screenGame = new ScreenGame(this);
 		screenSettings = new ScreenSettings(this);
 		screenAbout = new ScreenAbout(this);
+
 		setScreen(screenIntro);
 	}
 

@@ -24,7 +24,7 @@ public class ScreenGame implements Screen {
 	Music sndMusic;
 
 	// создание массива ссылок на объекты
-	Mosquito[] mosq = new Mosquito[55];
+	Mosquito[] mosq = new Mosquito[5];
 	int kills;
 	long timeStart, timeCurrent;
 
@@ -44,7 +44,7 @@ public class ScreenGame implements Screen {
 		for(int i=0; i<imgMosq.length; i++){
 			imgMosq[i] = new Texture("mosq"+i+".png");
 		}
-		imgBackGround = new Texture("boloto.jpg");
+		imgBackGround = new Texture("backgrounds/bg_boloto.jpg");
 		imgBtnMenu = new Texture("menu.png");
 
 		// создаём объекты звуков
@@ -53,7 +53,8 @@ public class ScreenGame implements Screen {
 		}
 		sndMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/smeshariki.mp3"));
 		sndMusic.setLooping(true);
-		//sndMusic.play();
+		sndMusic.setVolume(0.2f);
+		if(mgg.musicOn) sndMusic.play();
 
 		// создаём объекты игроков для таблицы рекордов
 		for (int i = 0; i < players.length; i++) {
@@ -83,7 +84,7 @@ public class ScreenGame implements Screen {
 					if (mosq[i].isAlive) {
 						if (mosq[i].hit(mgg.touch.x, mgg.touch.y)) {
 							kills++;
-							sndMosq[MathUtils.random(0, 3)].play();
+							if(mgg.soundOn) sndMosq[MathUtils.random(0, 3)].play();
 							if (kills == mosq.length) {
 								gameState = ENTER_NAME;
 							}
@@ -172,6 +173,7 @@ public class ScreenGame implements Screen {
 		for (int i = 0; i < sndMosq.length; i++) {
 			sndMosq[i].dispose();
 		}
+		sndMusic.dispose();
 		imgBackGround.dispose();
 	}
 

@@ -11,16 +11,16 @@ public class ScreenSettings implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фон
-    MosquitoButton btnGame, btnOptions, btnAbout, btnExit;
+    MosquitoButton btnSound, btnMusic, btnClearRecords, btnBack;
 
     public ScreenSettings(MyGdxGame myGdxGame){
         mgg = myGdxGame;
-        imgBackGround = new Texture("boloto1.jpg");
+        imgBackGround = new Texture("backgrounds/bg_settings.jpg");
         // создаём кнопки
-        btnGame = new MosquitoButton(mgg.fontLarge, "PLAY", 500, 600);
-        btnOptions = new MosquitoButton(mgg.fontLarge, "OPTIONS", 500, 500);
-        btnAbout = new MosquitoButton(mgg.fontLarge, "ABOUT", 500, 400);
-        btnExit = new MosquitoButton(mgg.fontLarge, "EXIT", 500, 300);
+        btnSound = new MosquitoButton(mgg.fontLarge, "Sound: ON", 500, 500);
+        btnMusic = new MosquitoButton(mgg.fontLarge, "Music: ON", 500, 400);
+        btnClearRecords = new MosquitoButton(mgg.fontLarge, "Clear Records", 500, 300);
+        btnBack = new MosquitoButton(mgg.fontLarge, "Back", 500, 200);
     }
 
     @Override
@@ -34,17 +34,27 @@ public class ScreenSettings implements Screen {
         if(Gdx.input.justTouched()) {
             mgg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             mgg.camera.unproject(mgg.touch);
-            if(btnGame.hit(mgg.touch.x, mgg.touch.y)){
-                mgg.setScreen(mgg.screenGame);
+            if(btnSound.hit(mgg.touch.x, mgg.touch.y)){
+                mgg.soundOn = !mgg.soundOn;
+                if(mgg.soundOn) btnSound.text = "Sound: ON";
+                else btnSound.text = "Sound: OFF";
             }
-            if(btnOptions.hit(mgg.touch.x, mgg.touch.y)){
+            if(btnMusic.hit(mgg.touch.x, mgg.touch.y)){
+                mgg.musicOn = !mgg.musicOn;
+                if(mgg.musicOn) {
+                    btnMusic.text = "Music: ON";
+                    mgg.screenGame.sndMusic.play();
+                }
+                else {
+                    btnMusic.text = "Music: OFF";
+                    mgg.screenGame.sndMusic.stop();
+                }
+            }
+            if(btnClearRecords.hit(mgg.touch.x, mgg.touch.y)){
 
             }
-            if(btnAbout.hit(mgg.touch.x, mgg.touch.y)){
-
-            }
-            if(btnExit.hit(mgg.touch.x, mgg.touch.y)){
-                Gdx.app.exit();
+            if(btnBack.hit(mgg.touch.x, mgg.touch.y)){
+                mgg.setScreen(mgg.screenIntro);
             }
         }
 
@@ -56,10 +66,10 @@ public class ScreenSettings implements Screen {
         mgg.batch.setProjectionMatrix(mgg.camera.combined);
         mgg.batch.begin();
         mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        btnGame.font.draw(mgg.batch, btnGame.text, btnGame.x, btnGame.y);
-        btnOptions.font.draw(mgg.batch, btnOptions.text, btnOptions.x, btnOptions.y);
-        btnAbout.font.draw(mgg.batch, btnAbout.text, btnAbout.x, btnAbout.y);
-        btnExit.font.draw(mgg.batch, btnExit.text, btnExit.x, btnExit.y);
+        btnSound.font.draw(mgg.batch, btnSound.text, btnSound.x, btnSound.y);
+        btnMusic.font.draw(mgg.batch, btnMusic.text, btnMusic.x, btnMusic.y);
+        btnClearRecords.font.draw(mgg.batch, btnClearRecords.text, btnClearRecords.x, btnClearRecords.y);
+        btnBack.font.draw(mgg.batch, btnBack.text, btnBack.x, btnBack.y);
         mgg.batch.end();
     }
 

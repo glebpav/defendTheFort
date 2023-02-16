@@ -11,16 +11,16 @@ public class ScreenIntro implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фон
-    MosquitoButton btnGame, btnOptions, btnAbout, btnExit;
+    MosquitoButton btnGame, btnSettings, btnAbout, btnExit;
 
     public ScreenIntro(MyGdxGame myGdxGame){
         mgg = myGdxGame;
-        imgBackGround = new Texture("boloto1.jpg");
+        imgBackGround = new Texture("backgrounds/bg_intro.jpg");
         // создаём кнопки
-        btnGame = new MosquitoButton(mgg.fontLarge, "PLAY", 500, 600);
-        btnOptions = new MosquitoButton(mgg.fontLarge, "OPTIONS", 500, 500);
-        btnAbout = new MosquitoButton(mgg.fontLarge, "ABOUT", 500, 400);
-        btnExit = new MosquitoButton(mgg.fontLarge, "EXIT", 500, 300);
+        btnGame = new MosquitoButton(mgg.fontLarge, "PLAY", 500, 450);
+        btnSettings = new MosquitoButton(mgg.fontLarge, "SETTINGS", 500, 350);
+        btnAbout = new MosquitoButton(mgg.fontLarge, "ABOUT", 500, 250);
+        btnExit = new MosquitoButton(mgg.fontLarge, "EXIT", 500, 150);
     }
 
     @Override
@@ -37,8 +37,8 @@ public class ScreenIntro implements Screen {
             if(btnGame.hit(mgg.touch.x, mgg.touch.y)){
                 mgg.setScreen(mgg.screenGame);
             }
-            if(btnOptions.hit(mgg.touch.x, mgg.touch.y)){
-
+            if(btnSettings.hit(mgg.touch.x, mgg.touch.y)){
+                mgg.setScreen(mgg.screenSettings);
             }
             if(btnAbout.hit(mgg.touch.x, mgg.touch.y)){
                 mgg.setScreen(mgg.screenAbout);
@@ -57,7 +57,7 @@ public class ScreenIntro implements Screen {
         mgg.batch.begin();
         mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         btnGame.font.draw(mgg.batch, btnGame.text, btnGame.x, btnGame.y);
-        btnOptions.font.draw(mgg.batch, btnOptions.text, btnOptions.x, btnOptions.y);
+        btnSettings.font.draw(mgg.batch, btnSettings.text, btnSettings.x, btnSettings.y);
         btnAbout.font.draw(mgg.batch, btnAbout.text, btnAbout.x, btnAbout.y);
         btnExit.font.draw(mgg.batch, btnExit.text, btnExit.x, btnExit.y);
         mgg.batch.end();
