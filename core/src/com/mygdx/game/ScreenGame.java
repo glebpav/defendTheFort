@@ -58,7 +58,7 @@ public class ScreenGame implements Screen {
 
 		// создаём объекты игроков для таблицы рекордов
 		for (int i = 0; i < players.length; i++) {
-			players[i] = new Player("None", 0);
+			players[i] = new Player("Noname", 0);
 		}
 		loadTableOfRecords();
 
@@ -239,6 +239,13 @@ public class ScreenGame implements Screen {
 		}
 		for (int i = 0; i < players.length; i++) {
 			if(players[i].time == 1000000) players[i].time = 0;
+		}
+	}
+
+	void clearTableOfRecords(){
+		for (int i = 0; i < players.length; i++) {
+			players[i].name = "Noname";
+			players[i].time = 0;
 		}
 	}
 }
