@@ -24,7 +24,7 @@ public class ScreenGame implements Screen {
 	Music sndMusic;
 
 	// создание массива ссылок на объекты
-	Mosquito[] mosq = new Mosquito[5];
+	Mosquito[] mosq;
 	int kills;
 	long timeStart, timeCurrent;
 
@@ -51,7 +51,7 @@ public class ScreenGame implements Screen {
 		for(int i=0; i<sndMosq.length; i++) {
 			sndMosq[i] = Gdx.audio.newSound(Gdx.files.internal("sound/mos"+i+".mp3"));
 		}
-		sndMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/smeshariki.mp3"));
+		sndMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/soundcrazymosquitos.mp3"));
 		sndMusic.setLooping(true);
 		sndMusic.setVolume(0.2f);
 		if(mgg.musicOn) sndMusic.play();
@@ -185,8 +185,9 @@ public class ScreenGame implements Screen {
 
 	void gameStart(){
 		// создание объектов комаров
+		mosq = new Mosquito[mgg.numMosquitos];
 		for(int i=0; i<mosq.length; i++) {
-			mosq[i] = new Mosquito();
+			mosq[i] = new Mosquito(mgg);
 		}
 		kills = 0;
 		gameState = PLAY_GAME;

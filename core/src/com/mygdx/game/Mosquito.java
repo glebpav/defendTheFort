@@ -6,18 +6,20 @@ import static com.mygdx.game.MyGdxGame.SCR_WIDTH;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Mosquito {
+    MyGdxGame mgg;
     float x, y;
     float vx, vy;
     float width, height;
     int faza, nFaz = 10;
     boolean isAlive = true;
 
-    public Mosquito(){
-        width = height = MathUtils.random(100, 200);
+    public Mosquito(MyGdxGame myGdxGame){
+        mgg = myGdxGame;
+        width = height = MathUtils.random(mgg.sizeMosquitos-30, mgg.sizeMosquitos+30);
         x = SCR_WIDTH / 2f - width / 2;
         y = SCR_HEIGHT / 2f - height / 2;
-        vx = MathUtils.random(-5f, 5);
-        vy = MathUtils.random(-5f, 5);
+        vx = MathUtils.random(-mgg.speedMosquitos, mgg.speedMosquitos);
+        vy = MathUtils.random(-mgg.speedMosquitos, mgg.speedMosquitos);
         faza = MathUtils.random(0, nFaz-1);
     }
 

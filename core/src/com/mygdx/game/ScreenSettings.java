@@ -38,12 +38,21 @@ public class ScreenSettings implements Screen {
                 if(mgg.modeOfGame == MODE_EASY){
                     mgg.modeOfGame = MODE_NORMAL;
                     btnMode.text = "Mode: Normal";
+                    mgg.numMosquitos = 50;
+                    mgg.speedMosquitos = 7;
+                    mgg.sizeMosquitos = 120;
                 } else if(mgg.modeOfGame == MODE_NORMAL){
                     mgg.modeOfGame = MODE_HARD;
                     btnMode.text = "Mode: Hard";
+                    mgg.numMosquitos = 250;
+                    mgg.speedMosquitos = 10;
+                    mgg.sizeMosquitos = 80;
                 } else if(mgg.modeOfGame == MODE_HARD){
                     mgg.modeOfGame = MODE_EASY;
                     btnMode.text = "Mode: Easy";
+                    mgg.numMosquitos = 10;
+                    mgg.speedMosquitos = 5;
+                    mgg.sizeMosquitos = 180;
                 }
             }
             if(btnSound.hit(mgg.touch.x, mgg.touch.y)){
