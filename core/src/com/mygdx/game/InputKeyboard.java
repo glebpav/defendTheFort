@@ -12,6 +12,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class InputKeyboard {
+    private final String fontName = "mr_countryhouse.ttf";
+    private final String imageKeys = "keys.png";
+
     private boolean endOfEdit;
 
     private final float x, y; // координаты
@@ -21,7 +24,6 @@ public class InputKeyboard {
     private final int textLength; // длина вводимого текста
 
     private BitmapFont font;
-    private final String fontName = "mr_countryhouse.ttf";
 
     private String text = ""; // вводимый текст
     private static final String LETTERS_EN_CAPS = "1234567890-~QWERTYUIOP+?^ASDFGHJKL;'`ZXCVBNM<> |";
@@ -43,7 +45,7 @@ public class InputKeyboard {
         generateFont();
         this.textLength = textLength; // количество вводимых символов
 
-        imgAtlasKeys = new Texture("keys.png");
+        imgAtlasKeys = new Texture(imageKeys);
         imgKeyUP = new TextureRegion(imgAtlasKeys, 0, 0, 256, 256);
         imgKeyDown = new TextureRegion(imgAtlasKeys, 256, 0, 256, 256);
         imgEditText = new TextureRegion(imgAtlasKeys, 256*2, 0, 256, 256);
