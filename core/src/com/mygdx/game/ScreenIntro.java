@@ -48,10 +48,6 @@ public class ScreenIntro implements Screen {
             }
         }
 
-        // события игры
-        // ------------
-
-        // отрисовка всего
         mgg.camera.update();
         mgg.batch.setProjectionMatrix(mgg.camera.combined);
         mgg.batch.begin();

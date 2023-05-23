@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import static com.mygdx.game.MyGdxGame.SCR_HEIGHT;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,14 +19,16 @@ public class MProgressBar {
 
     private final int positionX;
     private final int positionY;
+    private String barTitle;
 
-    MProgressBar(int maxWidth, int height, double maxValue, int positionX, int positionY) {
+    MProgressBar(int maxWidth, int height, double maxValue, int positionX, int positionY, String barTitle) {
         this.height = height;
         this.maxWidth = maxWidth;
         this.maxValue = maxValue;
         this.positionX = positionX;
         this.positionY = positionY;
         this.width = maxWidth;
+        this.barTitle = barTitle;
 
         initBars();
     }
@@ -35,9 +39,10 @@ public class MProgressBar {
         else width = (int) (maxWidth * (value / maxValue));
     }
 
-    void drawBar(SpriteBatch batch) {
-        batch.draw(backFullBarTexture, positionX, positionY, maxWidth, height);
-        if(width > 0) batch.draw(frontBarTexture, positionX, positionY, width, height);
+    void drawBar(MyGdxGame mgg) {
+        mgg.batch.draw(backFullBarTexture, positionX, positionY, maxWidth, height);
+        if (width > 0) mgg.batch.draw(frontBarTexture, positionX, positionY, width, height);
+        mgg.font.draw(mgg.batch, barTitle, positionX + maxWidth + 15, positionY + 43);
     }
 
     void initBars() {

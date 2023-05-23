@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
 
+import javax.swing.plaf.metal.MetalMenuBarUI;
+
 public class ScreenGame2 implements Screen {
 
     MyGdxGame mgg;
@@ -21,10 +23,8 @@ public class ScreenGame2 implements Screen {
     Texture imgBackGround; // фон
     Texture imgBtnMenu;
 
-    // создание массива ссылок на объекты
     ArrayList<Enemy> enemiesArray;
     int countOfAliveEnemies;
-
 
     MosquitoButton btnRestart, btnExit;
     MosquitoButton btnMenu;
@@ -42,12 +42,12 @@ public class ScreenGame2 implements Screen {
         imgBackGround = new Texture("backgrounds/bg_boloto.jpg");
         imgBtnMenu = new Texture("menu.png");
 
-        btnRestart = new MosquitoButton(mgg.font, "Restart", 450, 200);
-        btnExit = new MosquitoButton(mgg.font, "Exit", 750, 200);
+        btnRestart = new MosquitoButton(mgg.font, "Restart", 450, 100);
+        btnExit = new MosquitoButton(mgg.font, "Exit", 750, 100);
         btnMenu = new MosquitoButton(SCR_WIDTH - 60, SCR_HEIGHT - 60, 50, 50);
 
-        hitPointsBar = new MProgressBar(1000, 10, MemoryHelper.loadUserHitPoints(), 100, 100);
-        weaponCoolDownBar = new MProgressBar(1000, 10, MemoryHelper.loadWeaponCoolDown() * 1000, 100, 70);
+        hitPointsBar = new MProgressBar(1000, 10, MemoryHelper.loadUserHitPoints(), 30, 80, "hp");
+        weaponCoolDownBar = new MProgressBar(1000, 10, MemoryHelper.loadWeaponCoolDown() * 1000, 30, 30, "cd");
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ScreenGame2 implements Screen {
                         gameSession.updateShotTime();
                         for (int i = 0; i < enemiesArray.size(); i++) {
                             if (enemiesArray.get(i).isAlive
-                                    && enemiesArray.get(i).hit(mgg.touch.x, mgg.touch.y)) {
+                                    && enemiesArray.get(i).hit(mgg.touch.x, mgg.touch.y, gameSession.userWeaponDamage)) {
                                 gameSession.killedEnemy(enemiesArray.get(i).enemyType);
                                 break;
                             }
@@ -106,8 +106,11 @@ public class ScreenGame2 implements Screen {
             }
         }
 
-        if (gameSession.isTimeToSpawnEnemy())
-            enemiesArray.add(new Enemy(mgg, EnemyType.EASY));
+        if (gameSession.isTimeToSpawnEnemy()) {
+            // Math.random()    0 - 1
+            if (Math.random() > 0.93) enemiesArray.add(new Enemy(mgg, EnemyType.HARD));
+            else enemiesArray.add(new Enemy(mgg, EnemyType.EASY));
+        }
 
         mgg.camera.update();
         mgg.batch.setProjectionMatrix(mgg.camera.combined);
@@ -137,20 +140,32 @@ public class ScreenGame2 implements Screen {
         mgg.font.draw(mgg.batch, "Time: " + gameSession.getSessionTime(), SCR_WIDTH - 500, SCR_HEIGHT - 10);
         mgg.font.draw(mgg.batch, "Hp: " + gameSession.userLeftHitPoints, 400, SCR_HEIGHT - 10);
         mgg.batch.draw(imgBtnMenu, btnMenu.x, btnMenu.y, btnMenu.width, btnMenu.height);
-        hitPointsBar.drawBar(mgg.batch);
+        hitPointsBar.drawBar(mgg);
         weaponCoolDownBar.setValue(gameSession.getLeftWeaponCoolDown());
-        weaponCoolDownBar.drawBar(mgg.batch);
+        weaponCoolDownBar.drawBar(mgg);
 
     }
 
     void drawAfterGameMenu() {
-        mgg.fontLarge.draw(mgg.batch, "Game Over", 0, 600, SCR_WIDTH, Align.center, true);
+        mgg.fontLarge.draw(mgg.batch, "Game Over", 0, 650, SCR_WIDTH, Align.center, true);
 
-        mgg.font.draw(mgg.batch, "Kill points: " + gameSession.killsPoints, 10, SCR_HEIGHT - 10);
-        mgg.font.draw(mgg.batch, "Time: " + gameSession.getSessionTime(), SCR_WIDTH - 500, SCR_HEIGHT - 10);
+        mgg.font.draw(mgg.batch, getOutputStr("Kill points: ", String.valueOf(gameSession.killsPoints), 30), 0, 500, SCR_WIDTH, Align.center, true);
+        mgg.font.draw(mgg.batch, getOutputStr("Best result: ", String.valueOf(MemoryHelper.loadUserMaxPoints()), 30), 0, 400, SCR_WIDTH, Align.center, true);
+        mgg.font.draw(mgg.batch, getOutputStr("Session time: ", String.valueOf(gameSession.getSessionTime()), 30), 0, 300, SCR_WIDTH, Align.center, true);
 
         mgg.font.draw(mgg.batch, btnRestart.text, btnRestart.x, btnRestart.y);
         mgg.font.draw(mgg.batch, btnExit.text, btnExit.x, btnExit.y);
+    }
+
+    String getOutputStr(String message, String value, int outStrLen) {
+        StringBuilder messageBuilder = new StringBuilder(message);
+        for (int i = messageBuilder.length(); i < outStrLen - value.length(); i++) {
+            messageBuilder.append('_');
+        }
+
+        messageBuilder.append(' ');
+        message = messageBuilder + value;
+        return message;
     }
 
     @Override
