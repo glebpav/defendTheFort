@@ -3,14 +3,14 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
-public class MosquitoButton {
+public class MyButton {
     float x, y;
     float width, height;
     String text;
     BitmapFont font;
     boolean textButton;
 
-    public MosquitoButton(BitmapFont font, String text, float x, float y) {
+    public MyButton(BitmapFont font, String text, float x, float y) {
         this.x = x;
         this.y = y;
         this.text = text;
@@ -21,7 +21,7 @@ public class MosquitoButton {
         textButton = true;
     }
 
-    public MosquitoButton(float x, float y, float width, float height){
+    public MyButton(float x, float y, float width, float height){
         this.x = x;
         this.y = y;
         this.width = width;

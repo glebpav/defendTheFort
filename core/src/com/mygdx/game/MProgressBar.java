@@ -15,11 +15,11 @@ public class MProgressBar {
     private int width;
     private final int height;
     private final int maxWidth;
-    private final double maxValue;
+    private double maxValue;
 
     private final int positionX;
     private final int positionY;
-    private String barTitle;
+    private final String barTitle;
 
     MProgressBar(int maxWidth, int height, double maxValue, int positionX, int positionY, String barTitle) {
         this.height = height;
@@ -33,16 +33,20 @@ public class MProgressBar {
         initBars();
     }
 
+    void setMaxValue(double value) {
+        maxValue = value;
+    }
+
     void setValue(double value) {
-        if (value < 0) return;
-        if (value > maxValue) width = maxWidth;
+        if (value < 0) width = 0;
+        else if (value > maxValue) width = maxWidth;
         else width = (int) (maxWidth * (value / maxValue));
     }
 
     void drawBar(MyGdxGame mgg) {
         mgg.batch.draw(backFullBarTexture, positionX, positionY, maxWidth, height);
-        if (width > 0) mgg.batch.draw(frontBarTexture, positionX, positionY, width, height);
-        mgg.font.draw(mgg.batch, barTitle, positionX + maxWidth + 15, positionY + 43);
+        mgg.batch.draw(frontBarTexture, positionX, positionY, width, height);
+        mgg.font.draw(mgg.batch, barTitle, positionX + maxWidth + 15, positionY + 40);
     }
 
     void initBars() {

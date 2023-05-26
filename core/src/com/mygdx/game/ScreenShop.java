@@ -12,20 +12,20 @@ public class ScreenShop implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фон
-    MosquitoButton btnReloadSpeedUpgrade;
-    MosquitoButton btnHealthUpgrade;
-    MosquitoButton btnDamageUpgrade;
-    MosquitoButton btnBack;
+    MyButton btnReloadSpeedUpgrade;
+    MyButton btnHealthUpgrade;
+    MyButton btnDamageUpgrade;
+    MyButton btnBack;
 
     String textAbout = "";
 
     ScreenShop(MyGdxGame myGdxGame) {
         mgg = myGdxGame;
-        btnReloadSpeedUpgrade = new MosquitoButton(mgg.font, "Improve reload speed", 380, 560);
-        btnHealthUpgrade = new MosquitoButton(mgg.font, "Improved walls", 380, 460);
-        btnDamageUpgrade = new MosquitoButton(mgg.font, "Improved damage", 380, 360);
+        btnReloadSpeedUpgrade = new MyButton(mgg.font, "Improve reload speed", 380, 560);
+        btnHealthUpgrade = new MyButton(mgg.font, "Improved walls", 380, 460);
+        btnDamageUpgrade = new MyButton(mgg.font, "Improved damage", 380, 360);
         imgBackGround = new Texture("backgrounds/bg_shop.png");
-        btnBack = new MosquitoButton(mgg.font, "BACK", 500, 150);
+        btnBack = new MyButton(mgg.font, "BACK", 500, 150);
     }
 
     @Override

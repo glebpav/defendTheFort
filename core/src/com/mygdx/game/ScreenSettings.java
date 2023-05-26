@@ -10,16 +10,16 @@ public class ScreenSettings implements Screen {
     MyGdxGame mgg;
 
     Texture imgBackGround; // фон
-    MosquitoButton btnSound, btnMusic, btnClearRecords, btnBack;
+    MyButton btnSound, btnMusic, btnClearRecords, btnBack;
 
     public ScreenSettings(MyGdxGame myGdxGame){
         mgg = myGdxGame;
         imgBackGround = new Texture("backgrounds/bg_intro.jpg");
         // создаём кнопки
-        btnSound = new MosquitoButton(mgg.font, "Sound: ON", 500, 550);
-        btnMusic = new MosquitoButton(mgg.font, "Music: ON", 500, 450);
-        btnClearRecords = new MosquitoButton(mgg.font, "Delete save", 500, 350);
-        btnBack = new MosquitoButton(mgg.font, "Back", 500, 150);
+        btnSound = new MyButton(mgg.font, "Sound: ON", 500, 550);
+        btnMusic = new MyButton(mgg.font, "Music: ON", 500, 450);
+        btnClearRecords = new MyButton(mgg.font, "Delete save", 500, 350);
+        btnBack = new MyButton(mgg.font, "Back", 500, 150);
     }
 
     @Override
@@ -42,11 +42,9 @@ public class ScreenSettings implements Screen {
                 mgg.musicOn = !mgg.musicOn;
                 if(mgg.musicOn) {
                     btnMusic.text = "Music: ON";
-                    mgg.screenGame.sndMusic.play();
                 }
                 else {
                     btnMusic.text = "Music: OFF";
-                    mgg.screenGame.sndMusic.stop();
                 }
             }
             if(btnClearRecords.hit(mgg.touch.x, mgg.touch.y)){

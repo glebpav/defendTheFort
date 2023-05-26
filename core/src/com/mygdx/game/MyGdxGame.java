@@ -29,7 +29,6 @@ public class MyGdxGame extends Game {
     InputKeyboard keyboard;
 
     ScreenIntro screenIntro;
-    ScreenGame screenGame;
     ScreenGame2 screenGame2;
     ScreenSettings screenSettings;
     ScreenAbout screenAbout;
@@ -56,7 +55,6 @@ public class MyGdxGame extends Game {
         keyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT, 10);
 
         screenIntro = new ScreenIntro(this);
-        screenGame = new ScreenGame(this);
         screenSettings = new ScreenSettings(this);
         screenAbout = new ScreenAbout(this);
         screenGame2 = new ScreenGame2(this);

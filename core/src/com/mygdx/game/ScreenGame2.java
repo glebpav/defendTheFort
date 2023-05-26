@@ -27,8 +27,8 @@ public class ScreenGame2 implements Screen {
     ArrayList<Color> enemiesColorArray;
     int countOfAliveEnemies;
 
-    MosquitoButton btnRestart, btnExit;
-    MosquitoButton btnMenu;
+    MyButton btnRestart, btnExit;
+    MyButton btnMenu;
     MProgressBar hitPointsBar;
     MProgressBar weaponCoolDownBar;
 
@@ -59,9 +59,9 @@ public class ScreenGame2 implements Screen {
         killedEnemySprite = new Sprite(texture, 73, 1, 65, 58);
         killedEnemySprite.flip(false, true);
 
-        btnRestart = new MosquitoButton(mgg.font, "Restart", 450, 100);
-        btnExit = new MosquitoButton(mgg.font, "Exit", 750, 100);
-        btnMenu = new MosquitoButton(SCR_WIDTH - 60, SCR_HEIGHT - 60, 50, 50);
+        btnRestart = new MyButton(mgg.font, "Restart", 450, 100);
+        btnExit = new MyButton(mgg.font, "Exit", 750, 100);
+        btnMenu = new MyButton(SCR_WIDTH - 60, SCR_HEIGHT - 60, 50, 50);
 
         hitPointsBar = new MProgressBar(1000, 10, MemoryHelper.loadUserHitPoints(), 30, 80, "hp");
         weaponCoolDownBar = new MProgressBar(1000, 10, MemoryHelper.loadWeaponCoolDown() * 1000, 30, 30, "cd");
@@ -77,6 +77,8 @@ public class ScreenGame2 implements Screen {
         enemiesColorArray = new ArrayList<>();
         countOfAliveEnemies = 0;
         gameSession = new GameState();
+        hitPointsBar.setMaxValue(MemoryHelper.loadUserHitPoints());
+        weaponCoolDownBar.setMaxValue(MemoryHelper.loadWeaponCoolDown() * 1000);
         hitPointsBar.setValue(MemoryHelper.loadUserHitPoints());
     }
 
@@ -159,16 +161,21 @@ public class ScreenGame2 implements Screen {
             if (enemy.isAlive) {
                 mgg.batch.draw(enemyImgArray.get(enemy.faza / 7), enemy.x, enemy.y, enemy.width, enemy.height);
                 enemy.changePhase();
-            } else {
-                Color oldColor = mgg.batch.getColor();
-                Gdx.app.log("MyTag", "alpha: " + oldColor.a);
-                mgg.batch.setColor(enemiesColorArray.get(idx));
-                mgg.batch.draw(killedEnemySprite, enemy.x, enemy.y, enemy.width, enemy.height);
-                oldColor.a = 1;
-                mgg.batch.setColor(oldColor);
             }
             idx++;
         }
+        idx = 0;
+        Color oldColor = mgg.batch.getColor();
+        for (Enemy enemy : enemiesArray) {
+            if (!enemy.isAlive) {
+                Gdx.app.log("MyTag", "alpha: " + oldColor.a);
+                mgg.batch.setColor(enemiesColorArray.get(idx));
+                mgg.batch.draw(killedEnemySprite, enemy.x, enemy.y, enemy.width, enemy.height);
+            }
+            idx++;
+        }
+        oldColor.a = 1;
+        mgg.batch.setColor(oldColor);
         mgg.font.draw(mgg.batch, "Kill points: " + gameSession.killsPoints, 10, SCR_HEIGHT - 10);
         mgg.font.draw(mgg.batch, "Time: " + gameSession.getSessionTime(), SCR_WIDTH - 500, SCR_HEIGHT - 10);
         mgg.font.draw(mgg.batch, "Hp: " + gameSession.userLeftHitPoints, 400, SCR_HEIGHT - 10);
@@ -182,9 +189,10 @@ public class ScreenGame2 implements Screen {
     void drawAfterGameMenu() {
         mgg.fontLarge.draw(mgg.batch, "Game Over", 0, 650, SCR_WIDTH, Align.center, true);
 
-        mgg.font.draw(mgg.batch, getOutputStr("Kill points: ", String.valueOf(gameSession.killsPoints), 30), 0, 500, SCR_WIDTH, Align.center, true);
-        mgg.font.draw(mgg.batch, getOutputStr("Best result: ", String.valueOf(MemoryHelper.loadUserMaxPoints()), 30), 0, 400, SCR_WIDTH, Align.center, true);
-        mgg.font.draw(mgg.batch, getOutputStr("Session time: ", String.valueOf(gameSession.getSessionTime()), 30), 0, 300, SCR_WIDTH, Align.center, true);
+        mgg.font.draw(mgg.batch, getOutputStr("Kill points: ", String.valueOf(gameSession.killsPoints), 30), 0, 530, SCR_WIDTH, Align.center, true);
+        mgg.font.draw(mgg.batch, getOutputStr("Best result: ", String.valueOf(MemoryHelper.loadUserMaxPoints()), 30), 0, 430, SCR_WIDTH, Align.center, true);
+        mgg.font.draw(mgg.batch, getOutputStr("Earned money: ", String.valueOf(gameSession.earnedMoney), 30), 0, 330, SCR_WIDTH, Align.center, true);
+        mgg.font.draw(mgg.batch, getOutputStr("Session time: ", String.valueOf(gameSession.getSessionTime()), 30), 0, 230, SCR_WIDTH, Align.center, true);
 
         mgg.font.draw(mgg.batch, btnRestart.text, btnRestart.x, btnRestart.y);
         mgg.font.draw(mgg.batch, btnExit.text, btnExit.x, btnExit.y);
