@@ -55,8 +55,8 @@ public class GameState {
     }
 
     public boolean isTimeToSpawnEnemy() {
-        long sessionTime = currentTime - startTime;
-        if (currentTime - lastEnemySpawnTime > (100 / (Math.sqrt(sessionTime) + 10)) * 1000) {
+        long sessionTime = currentTime - startTime; //меняя первое число увеличиваем спавн одного моба
+        if (currentTime - lastEnemySpawnTime > (250 / (Math.sqrt(sessionTime) + 10)) * 1000) {
             lastEnemySpawnTime = currentTime;
             return true;
         }

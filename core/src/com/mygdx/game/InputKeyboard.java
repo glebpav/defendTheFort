@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class InputKeyboard {
-    private final String fontName = "mr_countryhouse.ttf";
+    private final String fontName = "comicbd.ttf";
     private final String imageKeys = "keys.png";
 
     private boolean endOfEdit;

@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import java.awt.image.ColorModel;
+
 public class MyGdxGame extends Game {
     public static final int SCR_WIDTH = 1280;
     public static final int SCR_HEIGHT = 720;
@@ -31,6 +33,7 @@ public class MyGdxGame extends Game {
     ScreenGame2 screenGame2;
     ScreenSettings screenSettings;
     ScreenAbout screenAbout;
+    ScreenShop screenShop;
 
     boolean soundOn = true;
     boolean musicOn = true;
@@ -57,17 +60,18 @@ public class MyGdxGame extends Game {
         screenSettings = new ScreenSettings(this);
         screenAbout = new ScreenAbout(this);
         screenGame2 = new ScreenGame2(this);
+        screenShop = new ScreenShop(this);
 
         setScreen(screenIntro);
     }
 
     void createFont() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mr_countryhouse.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("comicbd.ttf"));
         //FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("comic.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
-        parameter.size = 50;
-        parameter.color = Color.CHARTREUSE;
+        parameter.size = 40;
+        parameter.color = Color.ORANGE;
         parameter.borderWidth = 2;
         parameter.borderColor = Color.BLACK;
         font = generator.generateFont(parameter);

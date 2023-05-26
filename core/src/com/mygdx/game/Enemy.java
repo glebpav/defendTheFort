@@ -5,6 +5,8 @@ import static com.mygdx.game.MyGdxGame.SCR_HEIGHT;
 
 import com.badlogic.gdx.math.MathUtils;
 
+import com.badlogic.gdx.utils.TimeUtils;
+
 public class Enemy {
 
     MyGdxGame mgg;
@@ -13,7 +15,10 @@ public class Enemy {
     float width, height;
     float x, y;
     float vx, vy;
+    int faza;
+    static int nFaz = 5*7;
     boolean isAlive;
+    long defTime;
 
     public Enemy(MyGdxGame mgg, EnemyType enemyType) {
         this.mgg = mgg;
@@ -27,6 +32,7 @@ public class Enemy {
         enemyHitPoints = enemyType.hitPoints;
         width = enemyType.sizeY;
         height = enemyType.sizeX;
+        faza = 0;
 
     }
 
@@ -42,6 +48,7 @@ public class Enemy {
                 isAlive = false;
                 vx = 0;
                 vy = 0;
+                defTime = TimeUtils.millis();
                 return true;
             }
         }
@@ -50,6 +57,11 @@ public class Enemy {
 
     boolean isAttacking() {
         return x < 100;
+    }
+
+    void changePhase(){
+        if(++faza == nFaz) faza = 0;
+        //faza = ++faza % nFaz;
     }
 
 }

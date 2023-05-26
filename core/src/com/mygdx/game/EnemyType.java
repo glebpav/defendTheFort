@@ -16,8 +16,8 @@ public enum EnemyType {
             GameSettings.HARD_ENEMY_HP,
             GameSettings.HARD_ENEMY_DAMAGE,
             -1,
-            50,
-            50,
+            75,
+            75,
             GameSettings.HARD_ENEMY_MONEY_REWARD
     );
 

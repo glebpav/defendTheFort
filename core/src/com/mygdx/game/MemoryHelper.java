@@ -32,6 +32,7 @@ public class MemoryHelper {
         prefs.flush();
     }
 
+
     public static int loadWeaponDamage() {
         if (prefs.contains("weaponDamage"))
             return Integer.parseInt(prefs.getString("weaponDamage"));

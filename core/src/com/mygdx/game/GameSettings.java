@@ -2,6 +2,9 @@ package com.mygdx.game;
 
 public class GameSettings {
 
+    public static int HP_UPDATE = 20;
+
+
     public static int DEFAULT_USER_HP = 100;
     public static int DEFAULT_WEAPON_DAMAGE = 100;
     public static double DEFAULT_WEAPON_COOLDOWN = 1.5;

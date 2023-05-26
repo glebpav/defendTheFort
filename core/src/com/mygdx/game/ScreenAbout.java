@@ -13,19 +13,14 @@ public class ScreenAbout implements Screen {
     Texture imgBackGround; // фон
     MosquitoButton btnBack;
 
-    String textAbout =  "Игра Crazy Mosquitos создана\n" +
-                        "в рамках проекта Mobile Game\n" +
-                        "Development на языке Java\n" +
-                        "с использованием LibGDX.\n" +
-                        "Цель игры: как можно быстрее\n" +
-                        "сбить всех комаров.";
+    String textAbout =  "Оформите кредит";
 
     public ScreenAbout(MyGdxGame myGdxGame){
         mgg = myGdxGame;
-        imgBackGround = new Texture("backgrounds/bg_about.jpg");
+        imgBackGround = new Texture("backgrounds/bg_intro.jpg");
         // создаём кнопки
 
-        btnBack = new MosquitoButton(mgg.fontLarge, "BACK", 500, 150);
+        btnBack = new MosquitoButton(mgg.font, "BACK", 500, 150);
     }
 
     @Override
@@ -53,7 +48,7 @@ public class ScreenAbout implements Screen {
         mgg.batch.setProjectionMatrix(mgg.camera.combined);
         mgg.batch.begin();
         mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        mgg.font.draw(mgg.batch, textAbout, 400, 650);
+        mgg.font.draw(mgg.batch, textAbout, 400, 400);
         btnBack.font.draw(mgg.batch, btnBack.text, btnBack.x, btnBack.y);
         mgg.batch.end();
     }

@@ -5,13 +5,13 @@ import static com.mygdx.game.MyGdxGame.SCR_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
-
-import javax.swing.plaf.metal.MetalMenuBarUI;
+import java.util.Collections;
 
 public class ScreenGame2 implements Screen {
 
@@ -19,11 +19,12 @@ public class ScreenGame2 implements Screen {
 
     Texture texture, texture2;
 
-    Texture[] imgMosq = new Texture[11]; // ссылка на текстуры (картинки)
     Texture imgBackGround; // фон
     Texture imgBtnMenu;
 
+    ArrayList<Sprite> enemyImgArray;
     ArrayList<Enemy> enemiesArray;
+    ArrayList<Color> enemiesColorArray;
     int countOfAliveEnemies;
 
     MosquitoButton btnRestart, btnExit;
@@ -33,14 +34,30 @@ public class ScreenGame2 implements Screen {
 
     GameState gameSession;
 
+    Sprite killedEnemySprite;
+
+    public ArrayList<Sprite> reverse(ArrayList<Sprite> list) {
+        for (int i = 0, j = list.size() - 1; i < j; i++) {
+            list.add(i, list.remove(j));
+        }
+        return list;
+    }
+
     public ScreenGame2(MyGdxGame myGdxGame) {
         mgg = myGdxGame;
+        enemyImgArray = new ArrayList<>();
+        texture = new Texture(Gdx.files.internal("enemyMoveTiles.png"));
 
-        for (int i = 0; i < imgMosq.length; i++) {
-            imgMosq[i] = new Texture("mosq" + i + ".png");
+        for (int i = 0; i < Enemy.nFaz / 7; i++) {
+            Sprite sprite = (new Sprite(texture, 70 * i + 3, 1, 65, 58));
+            sprite.flip(true, false);
+            enemyImgArray.add(sprite);
         }
+        Collections.reverse(enemyImgArray);
         imgBackGround = new Texture("backgrounds/bg_boloto.jpg");
         imgBtnMenu = new Texture("menu.png");
+        killedEnemySprite = new Sprite(texture, 73, 1, 65, 58);
+        killedEnemySprite.flip(false, true);
 
         btnRestart = new MosquitoButton(mgg.font, "Restart", 450, 100);
         btnExit = new MosquitoButton(mgg.font, "Exit", 750, 100);
@@ -56,7 +73,8 @@ public class ScreenGame2 implements Screen {
     }
 
     void gameStart() {
-        enemiesArray = new ArrayList<Enemy>();
+        enemiesArray = new ArrayList<>();
+        enemiesColorArray = new ArrayList<>();
         countOfAliveEnemies = 0;
         gameSession = new GameState();
         hitPointsBar.setValue(MemoryHelper.loadUserHitPoints());
@@ -72,7 +90,6 @@ public class ScreenGame2 implements Screen {
 
             switch (gameSession.gameSate) {
                 case (GameState.PLAY_GAME): {
-                    Gdx.app.log("MyTag", "available: " + gameSession.isWeaponAvailable());
                     if (gameSession.isWeaponAvailable()) {
                         gameSession.updateShotTime();
                         for (int i = 0; i < enemiesArray.size(); i++) {
@@ -97,11 +114,23 @@ public class ScreenGame2 implements Screen {
         }
 
         for (int idx = 0; idx < enemiesArray.size(); idx++) {
+            if (!enemiesArray.get(idx).isAlive & gameSession.currentTime - enemiesArray.get(idx).defTime > 3000) {
+                enemiesArray.remove(idx);
+                enemiesColorArray.remove(idx);
+                idx -= 1;
+                continue;
+            }
+            if (!enemiesArray.get(idx).isAlive) {
+                Color oldColor = mgg.batch.getColor();
+                oldColor.a = (3000 - gameSession.currentTime + enemiesArray.get(idx).defTime) / 3000f;
+                enemiesColorArray.set(idx, oldColor);
+            }
             enemiesArray.get(idx).makeStep();
             if (enemiesArray.get(idx).isAttacking()) {
-                hitPointsBar.setValue(gameSession.userLeftHitPoints);
                 gameSession.missedEnemy(enemiesArray.get(idx).enemyType.damage);
+                hitPointsBar.setValue(gameSession.userLeftHitPoints);
                 enemiesArray.remove(idx);
+                enemiesColorArray.remove(idx);
                 idx -= 1;
             }
         }
@@ -110,6 +139,7 @@ public class ScreenGame2 implements Screen {
             // Math.random()    0 - 1
             if (Math.random() > 0.93) enemiesArray.add(new Enemy(mgg, EnemyType.HARD));
             else enemiesArray.add(new Enemy(mgg, EnemyType.EASY));
+            enemiesColorArray.add(mgg.batch.getColor());
         }
 
         mgg.camera.update();
@@ -124,17 +154,20 @@ public class ScreenGame2 implements Screen {
     }
 
     void drawGameEnv() {
+        int idx = 0;
         for (Enemy enemy : enemiesArray) {
-            mgg.batch.draw(
-                    imgMosq[0],
-                    enemy.x,
-                    enemy.y,
-                    enemy.width,
-                    enemy.height,
-                    0, 0,
-                    500, 500,
-                    true, false
-            );
+            if (enemy.isAlive) {
+                mgg.batch.draw(enemyImgArray.get(enemy.faza / 7), enemy.x, enemy.y, enemy.width, enemy.height);
+                enemy.changePhase();
+            } else {
+                Color oldColor = mgg.batch.getColor();
+                Gdx.app.log("MyTag", "alpha: " + oldColor.a);
+                mgg.batch.setColor(enemiesColorArray.get(idx));
+                mgg.batch.draw(killedEnemySprite, enemy.x, enemy.y, enemy.width, enemy.height);
+                oldColor.a = 1;
+                mgg.batch.setColor(oldColor);
+            }
+            idx++;
         }
         mgg.font.draw(mgg.batch, "Kill points: " + gameSession.killsPoints, 10, SCR_HEIGHT - 10);
         mgg.font.draw(mgg.batch, "Time: " + gameSession.getSessionTime(), SCR_WIDTH - 500, SCR_HEIGHT - 10);
