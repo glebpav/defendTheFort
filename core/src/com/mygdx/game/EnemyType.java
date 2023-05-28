@@ -38,4 +38,5 @@ public enum EnemyType {
         this.sizeY = sizeY;
         this.moneyReward = moneyReward;
     }
+
 }

@@ -11,13 +11,11 @@ public class ScreenShop implements Screen {
 
     MyGdxGame mgg;
 
-    Texture imgBackGround; // фон
+    Texture imgBackGround;
     MyButton btnReloadSpeedUpgrade;
     MyButton btnHealthUpgrade;
     MyButton btnDamageUpgrade;
     MyButton btnBack;
-
-    String textAbout = "";
 
     ScreenShop(MyGdxGame myGdxGame) {
         mgg = myGdxGame;
