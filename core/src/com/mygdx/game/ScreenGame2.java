@@ -26,7 +26,7 @@ public class ScreenGame2 implements Screen {
     ArrayList<Sprite> easyEnemyImgArray;
     ArrayList<Sprite> hardEnemyImgArray;
     ArrayList<Enemy> enemiesArray;
-    ArrayList<Color> enemiesColorArray;
+    ArrayList<Float> enemiesColorArray;
     int countOfAliveEnemies;
 
     MyButton btnRestart, btnExit;
@@ -127,9 +127,10 @@ public class ScreenGame2 implements Screen {
                 continue;
             }
             if (!enemiesArray.get(idx).isAlive) {
-                Color oldColor = mgg.batch.getColor();
-                oldColor.a = (3000 - gameSession.currentTime + enemiesArray.get(idx).defTime) / 3000f;
-                enemiesColorArray.set(idx, oldColor);
+                Gdx.app.log("Tag", String.valueOf((3000 - gameSession.currentTime + enemiesArray.get(idx).defTime) / 3000f));
+                // Color oldColor = mgg.batch.getColor();
+                // oldColor.a = (3000 - gameSession.currentTime + enemiesArray.get(idx).defTime) / 3000f;
+                enemiesColorArray.set(idx, (3000 - gameSession.currentTime + enemiesArray.get(idx).defTime) / 3000f);
             }
             enemiesArray.get(idx).makeStep();
             if (enemiesArray.get(idx).isAttacking()) {
@@ -143,39 +144,35 @@ public class ScreenGame2 implements Screen {
 
         if (gameSession.isTimeToSpawnEnemy()) {
             // Math.random()    0 - 1
-            if (Math.random() > 0.01) enemiesArray.add(new Enemy(mgg, EnemyType.HARD));
+            if (Math.random() > GameSettings.EASY_ENEMY_SPAWN_PROBABILITY)
+                enemiesArray.add(new Enemy(mgg, EnemyType.HARD));
             else enemiesArray.add(new Enemy(mgg, EnemyType.EASY));
-            enemiesColorArray.add(mgg.batch.getColor());
+            enemiesColorArray.add(mgg.batch.getColor().a);
         }
 
         mgg.camera.update();
         mgg.batch.setProjectionMatrix(mgg.camera.combined);
+        mgg.batch.enableBlending();
         mgg.batch.begin();
         mgg.batch.draw(imgBackGround, 0, 0, SCR_WIDTH, SCR_HEIGHT);
 
         if (gameSession.gameSate == GameState.PLAY_GAME) drawGameEnv();
         else if (gameSession.gameSate == GameState.GAME_OVER) drawAfterGameMenu();
 
+        //mgg.batch.disableBlending();
         mgg.batch.end();
     }
 
     void drawGameEnv() {
         Color oldColor = mgg.batch.getColor();
         oldColor.a = 1;
-        mgg.batch.setColor(oldColor);
-        mgg.font.draw(mgg.batch, "Kill points: " + gameSession.killsPoints, 10, SCR_HEIGHT - 10);
-        mgg.font.draw(mgg.batch, "Time: " + gameSession.getSessionTime(), SCR_WIDTH - 500, SCR_HEIGHT - 10);
-        mgg.font.draw(mgg.batch, "Hp: " + gameSession.userLeftHitPoints, 400, SCR_HEIGHT - 10);
-        mgg.batch.draw(imgBtnMenu, btnMenu.x, btnMenu.y, btnMenu.width, btnMenu.height);
-        hitPointsBar.drawBar(mgg);
-        weaponCoolDownBar.setValue(gameSession.getLeftWeaponCoolDown());
-        weaponCoolDownBar.drawBar(mgg);
-
         int idx = 0;
         for (Enemy enemy : enemiesArray) {
             if (enemy.isAlive) {
                 Sprite enemySprite;
-                if (enemy.enemyType == EnemyType.EASY) enemySprite = easyEnemyImgArray.get(enemy.faza / 7);
+                if (enemy.enemyType == EnemyType.EASY) {
+                    enemySprite = easyEnemyImgArray.get(enemy.faza / 7);
+                }
                 else enemySprite = hardEnemyImgArray.get(enemy.faza / 7);
                 mgg.batch.draw(enemySprite, enemy.x, enemy.y, enemy.width, enemy.height);
                 enemy.changePhase();
@@ -186,13 +183,26 @@ public class ScreenGame2 implements Screen {
         for (Enemy enemy : enemiesArray) {
             if (!enemy.isAlive) {
                 Sprite killedEnemySprite;
-                if(enemy.enemyType == EnemyType.EASY) killedEnemySprite = killedEasyEnemySprite;
+                if (enemy.enemyType == EnemyType.EASY) killedEnemySprite = killedEasyEnemySprite;
                 else killedEnemySprite = killedHardEnemySprite;
-                mgg.batch.setColor(enemiesColorArray.get(idx));
-                mgg.batch.draw(killedEnemySprite, enemy.x, enemy.y, enemy.width, enemy.height);
+                killedEnemySprite.setPosition(enemy.x, enemy.y);
+                killedEnemySprite.setSize(enemy.width, enemy.height);
+                // mgg.batch.setColor(enemiesColorArray.get(idx));
+                Gdx.app.log("alpha", String.valueOf(enemiesColorArray.get(idx)));
+                killedEnemySprite.draw(mgg.batch, enemiesColorArray.get(idx));
             }
             idx++;
         }
+        //mgg.batch.setColor(oldColor);
+        mgg.font.draw(mgg.batch, "Kill points: " + gameSession.killsPoints, 10, SCR_HEIGHT - 10);
+        mgg.font.draw(mgg.batch, "Time: " + gameSession.getSessionTime(), SCR_WIDTH - 500, SCR_HEIGHT - 10);
+        mgg.font.draw(mgg.batch, "Hp: " + gameSession.userLeftHitPoints, 400, SCR_HEIGHT - 10);
+        mgg.batch.draw(imgBtnMenu, btnMenu.x, btnMenu.y, btnMenu.width, btnMenu.height);
+        hitPointsBar.drawBar(mgg);
+        weaponCoolDownBar.setValue(gameSession.getLeftWeaponCoolDown());
+        weaponCoolDownBar.drawBar(mgg);
+
+
     }
 
     void drawAfterGameMenu() {

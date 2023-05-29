@@ -26,7 +26,7 @@ public class Enemy {
 
         isAlive = true;
         x = SCR_WIDTH;
-        y = MathUtils.random(40, SCR_HEIGHT - 40);
+        y = MathUtils.random(100, SCR_HEIGHT - 130);
         vx = enemyType.velocity;
         vy = 0;
         enemyHitPoints = enemyType.hitPoints;
@@ -56,7 +56,7 @@ public class Enemy {
     }
 
     boolean isAttacking() {
-        return x < 100;
+        return x < 50;
     }
 
     void changePhase(){
